@@ -82,8 +82,8 @@ wrappedNull.hasLength(5); // false
 
 var wrappedString = check.wrap('hello');
 
-wrappedString.check.isNull(); // false
-wrappedString.check.hasLength(5); // true
+wrappedString.isNull(); // false
+wrappedString.hasLength(5); // true
 ```
 
 ### not
