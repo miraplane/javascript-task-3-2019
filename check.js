@@ -16,10 +16,16 @@ const forObjects = {
     },
     hasKeys: function (keys) {
         let result = true;
+        let count = 0;
         for (let key in this.workingObject) {
             if (this.workingObject.hasOwnProperty(key) && keys.indexOf(key) === -1) {
                 result = false;
+            } else {
+                count += 1;
             }
+        }
+        if (count !== keys.length) {
+            result = false;
         }
         if (this.hasOwnProperty('not')) {
             return !result;
@@ -55,11 +61,17 @@ const forObjects = {
     },
     hasValues: function (values) {
         let result = true;
+        let count = 0;
         for (let key in this.workingObject) {
             if (this.workingObject.hasOwnProperty(key) &&
                 values.indexOf(this.workingObject[key]) === -1) {
                 result = false;
+            } else {
+                count += 1;
             }
+        }
+        if (count !== values.length) {
+            result = false;
         }
         if (this.hasOwnProperty('not')) {
             return !result;
@@ -101,8 +113,13 @@ const forArray = {
 const forString = {
     hasWordsCount: function (count) {
         let words = this.workingObject.split(' ');
-
-        let result = words.length === count;
+        let length = 0;
+        for (let word of words) {
+            if (word.length >= 1) {
+                length += 1;
+            }
+        }
+        let result = length === count;
         if (this.hasOwnProperty('not')) {
             return !result;
         }

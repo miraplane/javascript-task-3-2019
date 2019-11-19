@@ -18,12 +18,20 @@ describe('CheckObject', function () {
         assert.ok(person.check.hasKeys(['name', 'age']));
     });
 
+    it ('should check that target hasKeys for object incorrect', function () {
+        assert.ok(!person.check.hasKeys(['name']));
+    });
+
     it('should check that target containsValues for object', function () {
         assert.ok(person.check.containsValues(['John']));
     });
 
     it('should check that target hasValues for object', function () {
         assert.ok(person.check.hasValues([20, 'John']));
+    });
+
+    it('should check that target hasValues for object incorrect', function () {
+        assert.ok(!person.check.hasValues([20]));
     });
 
     it('should check that target hasValueType for object incorrect', function () {
@@ -54,6 +62,10 @@ describe('CheckArray', function () {
 
     it('should check has only this keys', function () {
         assert.ok(arr.check.hasKeys(['0', '1', '5']));
+    });
+
+    it('should check has many keys', function () {
+        assert.ok(!numbers.check.hasKeys(['0', '1', '2', '3']));
     });
 
     it('should check that target containsValues for array', function () {
@@ -89,6 +101,14 @@ describe('CheckStringAndFunction', function () {
 
     it('should check that target hasWordsCount', function () {
         assert.ok(str.check.hasWordsCount(2));
+    });
+
+    it('check empty string with hasWordsCount', function () {
+        assert.ok(''.check.hasWordsCount(0));
+    });
+
+    it('check string without words', function () {
+        assert.ok('       '.check.hasWordsCount(0));
     });
 });
 
@@ -140,11 +160,11 @@ describe('Not', function () {
         age: 26
     };
 
-    it('k', function () {
+    it('not with containsKeys property', function () {
         assert.ok(!me.check.not.containsKeys(['age', 'name']));
     });
 
-    it('', function () {
+    it('not with hasValueType property', function () {
         assert.ok(me.check.not.hasValueType('age', String));
     });
 });
