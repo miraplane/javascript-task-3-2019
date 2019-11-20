@@ -71,6 +71,10 @@ describe('CheckArray', function () {
         assert.ok(!arr.check.containsKeys(['0', '3']));
     });
 
+    it('check not own property', function () {
+        assert.ok(!numbers.check.containsKeys(['length']));
+    });
+
     it('should check that target hasKeys', function () {
         assert.ok(numbers.check.hasKeys(['0', '1', '2']));
     });

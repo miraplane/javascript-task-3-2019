@@ -25,12 +25,14 @@ const forEvery = {
 
 const forObjects = {
     containsKeys: function (keys) {
-        let result = true;
-        for (let key of keys) {
-            if (!this.workingObject.hasOwnProperty(key)) {
-                result = false;
+        let count = 0;
+        console.info(Object.getOwnPropertyNames(this.workingObject));
+        for (let key in this.workingObject) {
+            if (this.workingObject.hasOwnProperty(key) && keys.indexOf(key) !== -1) {
+                count += 1;
             }
         }
+        let result = count === keys.length;
 
         return getWithNot(this, result);
     },
