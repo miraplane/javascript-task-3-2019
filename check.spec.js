@@ -8,38 +8,53 @@ const check = require('./check');
 check.init();
 
 describe('CheckObject', function () {
-    const person = { name: 'John', age: 20 };
+    const person = {
+        name: 'John',
+        age: 20,
+        func: function () {
+            return true;
+        },
+        arr: [1, 2, 3]
+    };
 
-    it('should check that target containsKeys for object', function () {
+    it('should check that target containsKeys for workingObject', function () {
         assert.ok(person.check.containsKeys(['name']));
     });
 
-    it('should check that target hasKeys for object', function () {
-        assert.ok(person.check.hasKeys(['name', 'age']));
+    it('should check that target hasKeys for workingObject', function () {
+        assert.ok(person.check.hasKeys(['name', 'age', 'arr', 'func']));
     });
 
-    it ('should check that target hasKeys for object incorrect', function () {
+    it ('should check that target hasKeys for workingObject incorrect', function () {
         assert.ok(!person.check.hasKeys(['name']));
     });
 
-    it('should check that target containsValues for object', function () {
+    it('should check that target containsValues for workingObject', function () {
         assert.ok(person.check.containsValues(['John']));
     });
 
-    it('should check that target hasValues for object', function () {
-        assert.ok(person.check.hasValues([20, 'John']));
+    it('should check that target hasValues for workingObject', function () {
+        assert.ok(!person.check.hasValues([20, 'John']));
     });
 
-    it('should check that target hasValues for object incorrect', function () {
+    it('should check that target hasValues for workingObject incorrect', function () {
         assert.ok(!person.check.hasValues([20]));
     });
 
-    it('should check that target hasValueType for object incorrect', function () {
+    it('should check that target hasValueType for workingObject incorrect', function () {
         assert.ok(!person.check.hasValueType('age', String));
     });
 
-    it('should check that target hasValueType for object', function () {
+    it('should check that target hasValueType for workingObject', function () {
         assert.ok(person.check.hasValueType('name', String));
+    });
+
+    it('value is Array', function () {
+        assert.ok(person.check.hasValueType('arr', Array));
+    });
+
+    it('value is Function', function () {
+        assert.ok(person.check.hasValueType('func', Function));
     });
 });
 

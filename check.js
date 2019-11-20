@@ -1,5 +1,14 @@
 'use strict';
 
+function getType(value) {
+    let type = typeof value;
+    if (Array.isArray(value)) {
+        type = 'array';
+    }
+
+    return type;
+}
+
 const forObjects = {
     containsKeys: function (keys) {
         let result = true;
@@ -81,9 +90,8 @@ const forObjects = {
     },
     hasValueType: function (key, type) {
         let value = this.workingObject[key];
-        let typeValue = (type(value)).valueOf();
 
-        let result = typeof value === typeof typeValue;
+        let result = getType(value) === getType(type());
         if (this.hasOwnProperty('not')) {
             return !result;
         }
@@ -140,15 +148,18 @@ const forFunction = {
 };
 
 exports.wrap = function (variable) {
+    let object = variable === null ? null : variable.check;
+
     return {
-        object: variable,
+        object: object,
         isNull: function () {
             return this.object === null;
         },
         containsKeys: function (keys) {
             let result;
             try {
-                result = variable.check.containsKeys(keys);
+
+                result = this.object.containsKeys(keys);
             } catch (err) {
                 return false;
             }
@@ -158,7 +169,7 @@ exports.wrap = function (variable) {
         hasKeys: function (keys) {
             let result;
             try {
-                result = variable.check.hasKeys(keys);
+                result = this.object.hasKeys(keys);
             } catch (err) {
                 return false;
             }
@@ -168,7 +179,7 @@ exports.wrap = function (variable) {
         containsValues: function (values) {
             let result;
             try {
-                result = variable.check.containsValues(values);
+                result = this.object.containsValues(values);
             } catch (err) {
                 return false;
             }
@@ -178,7 +189,7 @@ exports.wrap = function (variable) {
         hasValues: function (values) {
             let result;
             try {
-                result = variable.check.hasValues(values);
+                result = this.object.hasValues(values);
             } catch (err) {
                 return false;
             }
@@ -188,7 +199,7 @@ exports.wrap = function (variable) {
         hasValueType: function (key, type) {
             let result;
             try {
-                result = variable.check.hasValueType(key, type);
+                result = this.object.hasValueType(key, type);
             } catch (err) {
                 return false;
             }
@@ -198,7 +209,7 @@ exports.wrap = function (variable) {
         hasLength: function (length) {
             let result;
             try {
-                result = variable.check.hasLength(length);
+                result = this.object.hasLength(length);
             } catch (err) {
                 return false;
             }
@@ -208,7 +219,7 @@ exports.wrap = function (variable) {
         hasParamsCount: function (count) {
             let result;
             try {
-                result = variable.check.hasParamsCount(count);
+                result = this.object.hasParamsCount(count);
             } catch (err) {
                 return false;
             }
@@ -218,7 +229,7 @@ exports.wrap = function (variable) {
         hasWordsCount: function (count) {
             let result;
             try {
-                result = variable.check.hasWordsCount(count);
+                result = this.object.hasWordsCount(count);
             } catch (err) {
                 return false;
             }
@@ -232,10 +243,7 @@ exports.init = function () {
     Object.defineProperty(Object.prototype, 'check', {
         configurable: true,
         get: function () {
-            let type = typeof this;
-            if (Array.isArray(this)) {
-                type = 'array';
-            }
+            let type = getType(this);
             switch (type) {
                 case 'object':
                     return Object.assign({ workingObject: this }, forObjects);
