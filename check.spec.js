@@ -167,6 +167,10 @@ describe('Null', function () {
     it('Array haven`t property hasWordsCount', function () {
         assert.ok(!wrappedArray.hasWordsCount(3));
     });
+
+    it('Work with not', function () {
+        assert.ok(wrappedArray.not.hasLength(2));
+    });
 });
 
 describe('Not', function () {

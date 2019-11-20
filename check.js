@@ -9,6 +9,14 @@ function getType(value) {
     return type;
 }
 
+function getWithNot(object, answer) {
+    if (object.hasOwnProperty('not')) {
+        return !answer;
+    }
+
+    return answer;
+}
+
 const forObjects = {
     containsKeys: function (keys) {
         let result = true;
@@ -17,11 +25,8 @@ const forObjects = {
                 result = false;
             }
         }
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return getWithNot(this, result);
     },
     hasKeys: function (keys) {
         let result = true;
@@ -36,11 +41,8 @@ const forObjects = {
         if (count !== keys.length) {
             result = false;
         }
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return getWithNot(this, result);
     },
     containsValue: function (value) {
         let result = false;
@@ -49,24 +51,17 @@ const forObjects = {
                 result = true;
             }
         }
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return getWithNot(this, result);
     },
     containsValues: function (values) {
-        let result = true;
         for (let value of values) {
             if (!this.containsValue(value)) {
-                result = false;
+                return false;
             }
         }
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return true;
     },
     hasValues: function (values) {
         let result = true;
@@ -82,21 +77,15 @@ const forObjects = {
         if (count !== values.length) {
             result = false;
         }
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return getWithNot(this, result);
     },
     hasValueType: function (key, type) {
         let value = this.workingObject[key];
 
         let result = getType(value) === getType(type());
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return getWithNot(this, result);
     }
 };
 
@@ -108,13 +97,9 @@ const forArray = {
                 count += 1;
             }
         }
-
         let result = count === length;
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return getWithNot(this, result);
     }
 };
 
@@ -128,22 +113,16 @@ const forString = {
             }
         }
         let result = length === count;
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return getWithNot(this, result);
     }
 };
 
 const forFunction = {
     hasParamsCount: function (count) {
         let result = this.workingObject.length === count;
-        if (this.hasOwnProperty('not')) {
-            return !result;
-        }
 
-        return result;
+        return getWithNot(this, result);
     }
 };
 
@@ -158,83 +137,82 @@ exports.wrap = function (variable) {
         containsKeys: function (keys) {
             let result;
             try {
-
                 result = this.object.containsKeys(keys);
             } catch (err) {
-                return false;
+                result = false;
             }
 
-            return result;
+            return getWithNot(this, result);
         },
         hasKeys: function (keys) {
             let result;
             try {
                 result = this.object.hasKeys(keys);
             } catch (err) {
-                return false;
+                result = false;
             }
 
-            return result;
+            return getWithNot(this, result);
         },
         containsValues: function (values) {
             let result;
             try {
                 result = this.object.containsValues(values);
             } catch (err) {
-                return false;
+                result = false;
             }
 
-            return result;
+            return getWithNot(this, result);
         },
         hasValues: function (values) {
             let result;
             try {
                 result = this.object.hasValues(values);
             } catch (err) {
-                return false;
+                result = false;
             }
 
-            return result;
+            return getWithNot(this, result);
         },
         hasValueType: function (key, type) {
             let result;
             try {
                 result = this.object.hasValueType(key, type);
             } catch (err) {
-                return false;
+                result = false;
             }
 
-            return result;
+            return getWithNot(this, result);
         },
         hasLength: function (length) {
             let result;
             try {
                 result = this.object.hasLength(length);
             } catch (err) {
-                return false;
+                result = false;
             }
 
-            return result;
+            return getWithNot(this, result);
         },
         hasParamsCount: function (count) {
             let result;
             try {
                 result = this.object.hasParamsCount(count);
             } catch (err) {
-                return false;
+                result = false;
             }
 
-            return result;
+            return getWithNot(this, result);
         },
         hasWordsCount: function (count) {
             let result;
             try {
                 result = this.object.hasWordsCount(count);
             } catch (err) {
-                return false;
+                result = false;
             }
 
-            return result;
+            return getWithNot(this, result);
         }
     };
 };
