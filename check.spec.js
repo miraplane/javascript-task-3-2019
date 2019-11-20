@@ -157,7 +157,7 @@ describe('Null', function () {
     });
 
     it('String haven`t property containsKeys', function () {
-        assert.ok(!wrappedString.containsKeys(['length']));
+        assert.ok(!wrappedString.containsKeys(['1']));
     });
 
     it('Array have property containsValue', function () {

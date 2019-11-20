@@ -26,7 +26,6 @@ const forEvery = {
 const forObjects = {
     containsKeys: function (keys) {
         let count = 0;
-        console.info(Object.getOwnPropertyNames(this.workingObject));
         for (let key in this.workingObject) {
             if (this.workingObject.hasOwnProperty(key) && keys.indexOf(key) !== -1) {
                 count += 1;
@@ -134,6 +133,15 @@ const forFunction = {
     }
 };
 
+function tryCall(context, func, args) {
+    let result = false;
+    if (context.object !== null && context.object.hasOwnProperty(func.name)) {
+        result = func.apply(context.object, args);
+    }
+
+    return getWithNot(context, result);
+}
+
 exports.wrap = function (variable) {
     let object = variable === null ? null : variable.check;
 
@@ -145,84 +153,28 @@ exports.wrap = function (variable) {
             return getWithNot(this, result);
         },
         containsKeys: function (keys) {
-            let result;
-            try {
-                result = this.object.containsKeys(keys);
-            } catch (err) {
-                result = false;
-            }
-
-            return getWithNot(this, result);
+            return tryCall(this, forObjects.containsKeys, [keys]);
         },
         hasKeys: function (keys) {
-            let result;
-            try {
-                result = this.object.hasKeys(keys);
-            } catch (err) {
-                result = false;
-            }
-
-            return getWithNot(this, result);
+            return tryCall(this, forObjects.hasKeys, [keys]);
         },
         containsValues: function (values) {
-            let result;
-            try {
-                result = this.object.containsValues(values);
-            } catch (err) {
-                result = false;
-            }
-
-            return getWithNot(this, result);
+            return tryCall(this, forObjects.containsValues, [values]);
         },
         hasValues: function (values) {
-            let result;
-            try {
-                result = this.object.hasValues(values);
-            } catch (err) {
-                result = false;
-            }
-
-            return getWithNot(this, result);
+            return tryCall(this, forObjects.hasValues, [values]);
         },
         hasValueType: function (key, type) {
-            let result;
-            try {
-                result = this.object.hasValueType(key, type);
-            } catch (err) {
-                result = false;
-            }
-
-            return getWithNot(this, result);
+            return tryCall(this, forObjects.hasValueType, [key, type]);
         },
         hasLength: function (length) {
-            let result;
-            try {
-                result = this.object.hasLength(length);
-            } catch (err) {
-                result = false;
-            }
-
-            return getWithNot(this, result);
+            return tryCall(this, forArray.hasLength, [length]);
         },
         hasParamsCount: function (count) {
-            let result;
-            try {
-                result = this.object.hasParamsCount(count);
-            } catch (err) {
-                result = false;
-            }
-
-            return getWithNot(this, result);
+            return tryCall(this, forFunction.hasParamsCount, [count]);
         },
         hasWordsCount: function (count) {
-            let result;
-            try {
-                result = this.object.hasWordsCount(count);
-            } catch (err) {
-                result = false;
-            }
-
-            return getWithNot(this, result);
+            return tryCall(this, forString.hasWordsCount, [count]);
         }
     };
 };
