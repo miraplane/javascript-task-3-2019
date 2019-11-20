@@ -17,6 +17,12 @@ function getWithNot(object, answer) {
     return answer;
 }
 
+const forEvery = {
+    isNull: function () {
+        return getWithNot(this, this === null);
+    }
+};
+
 const forObjects = {
     containsKeys: function (keys) {
         let result = true;
@@ -132,7 +138,9 @@ exports.wrap = function (variable) {
     return {
         object: object,
         isNull: function () {
-            return this.object === null;
+            let result = this.object === null ? true : this.object.isNull();
+
+            return getWithNot(this, result);
         },
         containsKeys: function (keys) {
             let result;
@@ -224,13 +232,13 @@ exports.init = function () {
             let type = getType(this);
             switch (type) {
                 case 'object':
-                    return Object.assign({ workingObject: this }, forObjects);
+                    return Object.assign({ workingObject: this }, forObjects, forEvery);
                 case 'array':
-                    return Object.assign({ workingObject: this }, forObjects, forArray);
+                    return Object.assign({ workingObject: this }, forObjects, forArray, forEvery);
                 case 'string':
-                    return Object.assign({ workingObject: this }, forArray, forString);
+                    return Object.assign({ workingObject: this }, forArray, forString, forEvery);
                 case 'function':
-                    return Object.assign({ workingObject: this }, forFunction);
+                    return Object.assign({ workingObject: this }, forFunction, forEvery);
                 default:
                     return this;
             }
