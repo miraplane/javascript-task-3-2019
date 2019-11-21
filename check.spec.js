@@ -102,6 +102,10 @@ describe('CheckArray', function () {
     it('should check has length array with undefined elements', function () {
         assert.ok(arr.check.hasLength(3));
     });
+
+    it('check values', function () {
+        assert.ok(numbers.check.not.containsValues([2, 1, 100]));
+    });
 });
 
 describe('CheckStringAndFunction', function () {

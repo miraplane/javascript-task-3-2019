@@ -52,23 +52,23 @@ const forObjects = {
         return getWithNot(this, result);
     },
     containsValue: function (value) {
-        let result = false;
         for (let key in this.workingObject) {
             if (this.workingObject.hasOwnProperty(key) && this.workingObject[key] === value) {
-                result = true;
+                return true;
+            }
+        }
+
+        return false;
+    },
+    containsValues: function (values) {
+        let result = true;
+        for (let value of values) {
+            if (!this.containsValue(value)) {
+                result = false;
             }
         }
 
         return getWithNot(this, result);
-    },
-    containsValues: function (values) {
-        for (let value of values) {
-            if (!this.containsValue(value)) {
-                return false;
-            }
-        }
-
-        return true;
     },
     hasValues: function (values) {
         let result = true;
