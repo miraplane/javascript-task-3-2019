@@ -1,20 +1,11 @@
 'use strict';
 
 function getType(value) {
-    let type = typeof value;
-    if (Array.isArray(value)) {
-        type = 'array';
-    }
-
-    return type;
+    return Array.isArray(value) ? 'array' : typeof value;
 }
 
 function getWithNot(object, answer) {
-    if (object.hasOwnProperty('not')) {
-        return !answer;
-    }
-
-    return answer;
+    return object.hasOwnProperty('not') ? !answer : answer;
 }
 
 const forEvery = {
@@ -31,9 +22,8 @@ const forObjects = {
                 count += 1;
             }
         }
-        let result = count === keys.length;
 
-        return getWithNot(this, result);
+        return getWithNot(this, count === keys.length);
     },
     hasKeys: function (keys) {
         let result = true;
@@ -90,9 +80,7 @@ const forObjects = {
     hasValueType: function (key, type) {
         let value = this.workingObject[key];
 
-        let result = getType(value) === getType(type());
-
-        return getWithNot(this, result);
+        return getWithNot(this, getType(value) === getType(type()));
     }
 };
 
@@ -104,9 +92,8 @@ const forArray = {
                 count += 1;
             }
         }
-        let result = count === length;
 
-        return getWithNot(this, result);
+        return getWithNot(this, count === length);
     }
 };
 
@@ -119,17 +106,14 @@ const forString = {
                 length += 1;
             }
         }
-        let result = length === count;
 
-        return getWithNot(this, result);
+        return getWithNot(this, length === count);
     }
 };
 
 const forFunction = {
     hasParamsCount: function (count) {
-        let result = this.workingObject.length === count;
-
-        return getWithNot(this, result);
+        return getWithNot(this, this.workingObject.length === count);
     }
 };
 
